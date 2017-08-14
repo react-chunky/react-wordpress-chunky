@@ -54,7 +54,7 @@ class Chunkypress_function_savepost {
 		$responseCode = wp_remote_retrieve_response_code( $response );
 		$successful = in_array($responseCode, array(200, 201));
 		$responseBody = json_decode(wp_remote_retrieve_body( $response ), true);
-
+		
 		return array("successful" => $successful, "error" => $responseBody["errorMessage"]);
 	}
 
@@ -104,7 +104,7 @@ class Chunkypress_function_savepost {
 		$postId = $_GET['post'];
 
 		$response = $this->performPostSync($postId, $chunkypress_event);
-		$error = ($response["error"] ? 'Error: ' . $response["error"] : "");
+		$error = ($response["error"] ? 'Error: ' . $response["error"] . "." : "");
 
 		$syncStatus = ($response["successful"] ? "successfully saved" : "failed to save");
 		$syncPrompt = ($response["successful"] ? "This post is now available on all devices." : $error . " Please press [Update] to try again.");

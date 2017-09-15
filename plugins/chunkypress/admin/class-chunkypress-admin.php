@@ -114,7 +114,7 @@ class Chunkypress_Admin {
 	public function settings_cloud_endpoint_posts_render(  ) {
 		$options = get_option( 'ChunkyPress_settings' );
 		$ChunkyPress_cloud_endpoint_posts =  $options['ChunkyPress_cloud_endpoint_posts'];
-		$ChunkyPress_cloud_endpoint_posts = ($ChunkyPress_cloud_endpoint_posts ? $ChunkyPress_cloud_endpoint_posts : "posts");
+		$ChunkyPress_cloud_endpoint_posts = ($ChunkyPress_cloud_endpoint_posts ? $ChunkyPress_cloud_endpoint_posts : "feed");
 		?>
 			<input type='text' name='ChunkyPress_settings[ChunkyPress_cloud_endpoint_posts]' size='32' value='<?php echo  $ChunkyPress_cloud_endpoint_posts;?>'>
 		<?php
@@ -122,7 +122,7 @@ class Chunkypress_Admin {
 
 	public function settings_cloud_url_render(  ) {
 		$options = get_option( 'ChunkyPress_settings' );
-		$ChunkyPress_cloud_api_url = $options['ChunkyPress_cloud_api_url']; 
+		$ChunkyPress_cloud_api_url = $options['ChunkyPress_cloud_api_url'];
 		?>
 		<input type='text' name='ChunkyPress_settings[ChunkyPress_cloud_api_url]' size='32' value='<?php echo $ChunkyPress_cloud_api_url;?>'>
 		<?php

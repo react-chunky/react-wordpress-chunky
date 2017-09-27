@@ -33,8 +33,8 @@ class Chunkypress_function_savepost {
 
 	public function postRequest($requestData, $endpoint) {
 
-		if ($requestData->postStatus != 'published') {
-			return array("skip" => "This post is not published yet.")
+		if ($requestData["postStatus"] !== 'publish') {
+			return array("skip" => "This post is not published yet.");
 		}
 
 		$data = json_encode( $requestData );
@@ -115,21 +115,21 @@ class Chunkypress_function_savepost {
 		$error = "";
 		$syncStatus = "successfully saved";
 		$syncPrompt = "This post is now available on all devices.";
+		$syncNotice = "success";
 
 		if ($response["error"]) {
 			$error = 'Error: ' . $response["error"] . ".";
 			$syncStatus = "failed to save";
 			$syncPrompt = $error . " Please press [Update] to try again.";
+			$syncNotice = "error";
 		} else if ($response["skip"]) {
 			$syncStatus = "did not save";
 			$syncPrompt = $response["skip"];
+			$syncNotice = "info";
 		}
 
-		$syncStatus = ($response["successful"] ? "successfully saved" : "failed to save");
-		$syncPrompt = ($response["successful"] ? "This post is now available on all devices." : $error . " Please press [Update] to try again.");
-
 		?>
- 			<div data-dismissible="disable-done-notice-forever" class="notice notice-<?php echo ($response["successful"] ? "success" : "error"); ?> is-dismissible">
+ 			<div data-dismissible="disable-done-notice-forever" class="notice notice-<?php echo $syncNotice; ?> is-dismissible">
  		       <p><?php esc_html_e("Chunky " . $syncStatus . " this post to your Chunky Cloud. " . $syncPrompt, 'chunkypress' ); ?></p>
  		    </div>
  	    <?php

@@ -65,7 +65,7 @@ class Chunkypress_function_savepost {
 
 	public function performPostSync($postId, $event, $includeContent = false) {
 		$post = get_post($postId);
-		$postImageUrl = get_the_post_thumbnail_url($postId, 'full') || "";
+		$postImageUrl = get_the_post_thumbnail_url($postId, 'full');
 
 		// Figure out whether we want to include the content or not
 		// $postContent = ($includeContent ? nl2br($post->post_content) : "");

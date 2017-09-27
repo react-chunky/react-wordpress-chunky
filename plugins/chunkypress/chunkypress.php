@@ -11,7 +11,7 @@
  * Plugin Name:       ChunkyPress
  * Plugin URI:        http://chunky.io/wordpress
  * Description:       ChunkyPress enables your Wordpress Site to communicate with your Chunky Cloud
- * Version:           1.0.0
+ * Version:           1.1.0
  * Author:            I. Dan Calinescu
  * Author URI:        http://idancali.com
  * License:           GPL-2.0+
@@ -64,7 +64,7 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-chunkypress.php';
 function run_chunkypress() {
 
 	$functions = ["savepost"];
-	$version = '1.0.0';
+	$version = '1.1.0';
 
 	$plugin = new Chunkypress($functions, $version);
 	$plugin->run();

@@ -32,6 +32,11 @@ class Chunkypress_function_savepost {
 	}
 
 	public function postRequest($requestData, $endpoint) {
+
+		if ($requestData->postStatus != 'published') {
+			return array("skip" => "This post is not published yet.")
+		}
+
 		$data = json_encode( $requestData );
 		$args = array(
 			'method' => 'POST',
@@ -54,13 +59,13 @@ class Chunkypress_function_savepost {
 		$responseCode = wp_remote_retrieve_response_code( $response );
 		$successful = in_array($responseCode, array(200, 201));
 		$responseBody = json_decode(wp_remote_retrieve_body( $response ), true);
-		
+
 		return array("successful" => $successful, "error" => $responseBody["errorMessage"]);
 	}
 
 	public function performPostSync($postId, $event, $includeContent = false) {
 		$post = get_post($postId);
-		$postImageUrl = get_the_post_thumbnail_url($postId, 'full');
+		$postImageUrl = get_the_post_thumbnail_url($postId, 'full') || "";
 
 		// Figure out whether we want to include the content or not
 		// $postContent = ($includeContent ? nl2br($post->post_content) : "");
@@ -73,9 +78,11 @@ class Chunkypress_function_savepost {
 		$requestData = array(
 			'id' => $post->ID,
 			'sourceType' => 'wordpress',
+			'postStatus' => $post->post_status,
+			'postExcerpt' => $post->post_excerpt,
 			'sourceUrl' => $siteUrl,
 			'postJsonUrl' => $postJsonUrl,
-			'postHtmlUrl' => $postHtmlUrl, 	
+			'postHtmlUrl' => $postHtmlUrl,
 			'title' => $post->post_title,
 			'date' => $post->post_modified,
 			'summary' => $post->excerpt,
@@ -104,7 +111,19 @@ class Chunkypress_function_savepost {
 		$postId = $_GET['post'];
 
 		$response = $this->performPostSync($postId, $chunkypress_event);
-		$error = ($response["error"] ? 'Error: ' . $response["error"] . "." : "");
+
+		$error = "";
+		$syncStatus = "successfully saved";
+		$syncPrompt = "This post is now available on all devices.";
+
+		if ($response["error"]) {
+			$error = 'Error: ' . $response["error"] . ".";
+			$syncStatus = "failed to save";
+			$syncPrompt = $error . " Please press [Update] to try again.";
+		} else if ($response["skip"]) {
+			$syncStatus = "did not save";
+			$syncPrompt = $response["skip"];
+		}
 
 		$syncStatus = ($response["successful"] ? "successfully saved" : "failed to save");
 		$syncPrompt = ($response["successful"] ? "This post is now available on all devices." : $error . " Please press [Update] to try again.");
@@ -115,5 +134,5 @@ class Chunkypress_function_savepost {
  		    </div>
  	    <?php
    }
-  
+
 }
